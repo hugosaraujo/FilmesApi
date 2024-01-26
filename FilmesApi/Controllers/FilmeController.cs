@@ -2,6 +2,7 @@
 using FilmesApi.Data;
 using FilmesApi.Dtos;
 using FilmesApi.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesApi.Controllers;
@@ -31,10 +32,10 @@ public class FilmeController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<Filme> PegaFilmes([FromQuery]int skip = 0, 
+    public IEnumerable<ReadFilmeDto> PegaFilmes([FromQuery]int skip = 0, 
         [FromQuery]int take = 30)
     {
-        return _context.Filmes.Skip(skip).Take(take);
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
     }
 
     [HttpGet("{id}")]
@@ -42,7 +43,36 @@ public class FilmeController : ControllerBase
     {
         var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
         if (filme == null) return NotFound();
-        return Ok(filme);
+        var filmeDto = _mapper.Map<ReadFilmeDto>(filme);
+        return Ok(filmeDto);
         
+    }
+
+    [HttpPatch("{id}")]
+    public IActionResult AtualizaFilme(int id, [FromBody] JsonPatchDocument<UpdateFilmeDto> patch)
+    {
+        var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+
+        //até a linha 61 são inclusões necessárias para a utilização do patch
+        var filmeParaAtualizar = _mapper.Map<UpdateFilmeDto>(filme);
+
+        patch.ApplyTo(filmeParaAtualizar, ModelState);
+
+        if (!TryValidateModel(filmeParaAtualizar)) return ValidationProblem(ModelState); 
+        
+        _mapper.Map(filmeParaAtualizar, filme);
+        _context.SaveChanges();
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult ApagaFilme(int id)
+    {
+        var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+        _context.Remove(filme);
+        _context.SaveChanges();
+        return NoContent();
     }
 }
