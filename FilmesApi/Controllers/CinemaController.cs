@@ -73,5 +73,4 @@ public class CinemaController : ControllerBase
         _context.SaveChanges();
         return NoContent();
     }
-
 }
