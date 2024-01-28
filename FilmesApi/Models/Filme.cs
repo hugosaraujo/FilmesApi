@@ -16,4 +16,5 @@ public class Filme
     [Required(ErrorMessage = "O gênero do filme é obrigatório")]
     [MaxLength(25, ErrorMessage = "O tamanho do gênero não pode exceder 25 caracteres")]
     public string Genero { get; set; }
+    public virtual ICollection<Sessao> Sessoes { get; set; }
 }
