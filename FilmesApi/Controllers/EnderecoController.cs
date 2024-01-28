@@ -2,7 +2,7 @@
 using FilmesApi.Data;
 using FilmesApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using FilmesApi.Dtos;
+using FilmesApi.Data.Dtos;
 
 namespace FilmesApi.Controllers;
 

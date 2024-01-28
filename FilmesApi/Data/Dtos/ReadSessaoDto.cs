@@ -1,4 +1,4 @@
-﻿namespace FilmesApi.Dtos;
+﻿namespace FilmesApi.Data.Dtos;
 
 public record ReadSessaoDto
 {
