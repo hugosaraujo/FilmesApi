@@ -2,5 +2,5 @@
 
 public record CreateSessaoDto
 {
-
+    public int FilmeId { get; set; }
 }
