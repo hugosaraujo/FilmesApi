@@ -48,6 +48,16 @@ public class FilmeController : ControllerBase
         
     }
 
+    [HttpPut("{id}")]
+    public IActionResult AtualizaFilmeInteiro(int id [FromBody] UpdateFilmeDto filmeDto)
+    {
+        var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+        _mapper.Map(filmeDto, filme);
+        _context.SaveChanges();
+        return NoContent();
+    }
+
     [HttpPatch("{id}")]
     public IActionResult AtualizaFilme(int id, [FromBody] JsonPatchDocument<UpdateFilmeDto> patch)
     {
