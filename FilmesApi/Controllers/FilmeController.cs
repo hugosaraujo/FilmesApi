@@ -35,7 +35,7 @@ public class FilmeController : ControllerBase
     public IEnumerable<ReadFilmeDto> PegaFilmes([FromQuery]int skip = 0, 
         [FromQuery]int take = 30)
     {
-        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
     }
 
     [HttpGet("{id}")]
