@@ -49,7 +49,7 @@ public class FilmeController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult AtualizaFilmeInteiro(int id [FromBody] UpdateFilmeDto filmeDto)
+    public IActionResult AtualizaFilmeInteiro(int id, [FromBody] UpdateFilmeDto filmeDto)
     {
         var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
         if (filme == null) return NotFound();
