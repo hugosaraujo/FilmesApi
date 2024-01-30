@@ -26,20 +26,29 @@ public class FilmeController : ControllerBase
         Filme filme = _mapper.Map<Filme>(filmeDto);
         _context.Filmes.Add(filme);
         _context.SaveChanges();
-        return CreatedAtAction(nameof(RecuperaFilmePorId),
+        return CreatedAtAction(nameof(PegaFilmePorId),
                        new { Id = filme.Id }, 
                        filme);
     }
 
     [HttpGet]
-    public IEnumerable<ReadFilmeDto> PegaFilmes([FromQuery]int skip = 0, 
-        [FromQuery]int take = 30)
+    public IEnumerable<ReadFilmeDto> PegaFilmes(
+        [FromQuery]int skip = 0, 
+        [FromQuery]int take = 30,
+        [FromQuery]string? nomeCinema = null)
     {
-        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+        if(nomeCinema == null)
+        {
+            return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take).ToList());
+        }
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes
+            .Skip(skip)
+            .Take(take)
+            .Where(filme => filme.Sessoes.Any(sessao => sessao.Cinema.Nome == nomeCinema)).ToList());
     }
 
     [HttpGet("{id}")]
-    public IActionResult RecuperaFilmePorId(int id)
+    public IActionResult PegaFilmePorId(int id)
     {
         var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
         if (filme == null) return NotFound();
