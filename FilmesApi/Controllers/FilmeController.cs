@@ -22,6 +22,12 @@ public class FilmeController : ControllerBase
         _mapper = mapper;
     }
 
+    /// <summary>
+    /// Adiciona um filme ao banco de dados
+    /// </summary>
+    /// <param name="filmeDto">Objeto com os campos necessários para a criação de um filme</param>
+    /// <returns>IACtionResult</returns>
+    /// <response code="201">Caso a ação obtenha êxito</response>
     [HttpPost]
     public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto)
     {
@@ -31,12 +37,25 @@ public class FilmeController : ControllerBase
         return CreatedAtAction(nameof(RecuperaFilmePorId), new { id = filme.Id }, filme);
     }
 
+    /// <summary>
+    /// Retorna uma lista de Filmes
+    /// </summary>
+    /// <param name="skip">Informa quantos itens devem ser pulados no retorno</param>
+    /// <param name="take">Informa o intervalo de filmes que deve ser retornado</param>
+    /// <returns>IEnumerable</returns>
+    /// <response code="200">Obtendo êxito na resposta</response>
     [HttpGet]
     public IEnumerable<ReadFilmeDto> RecuperaFilmes([FromQuery]int skip = 0, [FromQuery]int take = 10)
     {
         return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
     }
 
+    /// <summary>
+    /// Retorna um filme a partir do valor do Id
+    /// </summary>
+    /// <param name="id">Valor de um Id para fazer a busca no banco de dados</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">Caso a ação obtenha êxito</response>
     [HttpGet("{id}")]
     public IActionResult RecuperaFilmePorId(int id)
     {
@@ -46,6 +65,13 @@ public class FilmeController : ControllerBase
         return Ok(filmeDto);  
     }
     
+    /// <summary>
+    /// Atualiza o objeto inteiro de um filme
+    /// </summary>
+    /// <param name="id">Valor de Id para conseguir buscar um filme no banco de dados</param>
+    /// <param name="filmeDto">Objeto com os campos necessário para fazer a atualização</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="204">Caso obtenha êxito</response>
     [HttpPut("{id}")]
     public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto filmeDto)
     {
@@ -56,6 +82,13 @@ public class FilmeController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Atualiza um parâmetro de um objeto filme
+    /// </summary>
+    /// <param name="id">Id para a busca do filme no banco de dados</param>
+    /// <param name="patch">Corpo do parâmetro a ser atualizado no banco de dados</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="204">Caso obtenha resposta positiva</response>
     [HttpPatch("{id}")]
     public IActionResult AtualizaFilmePorParte(int id, JsonPatchDocument<UpdateFilmeDto> patch)
     {
@@ -72,6 +105,12 @@ public class FilmeController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Apaga um filme do banco de dados
+    /// </summary>
+    /// <param name="id">Id para buscar um filme à ser apagado</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="204">Caso obtenha êxito</response>
     [HttpDelete("{id}")]
     public IActionResult ApagaFilme(int id)
     {
