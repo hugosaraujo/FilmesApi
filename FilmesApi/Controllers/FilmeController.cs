@@ -114,7 +114,7 @@ public class FilmeController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult ApagaFilme(int id)
     {
-        var filme = _context.Filmes.First(f => f.Id == id);
+        var filme = _context.Filmes.FirstOrDefault(f => f.Id == id);
         if (filme is null) return NotFound();
         _context.Filmes.Remove(filme);
         _context.SaveChanges();
